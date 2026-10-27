@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Human360 — Personal Health Dashboard</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<div id="authScreen" class="auth-screen">
+  <div class="auth-bg-orb orb-a"></div><div class="auth-bg-orb orb-b"></div>
+  <div class="auth-shell">
+    <div class="auth-brand"><div class="auth-logo">H<span>360</span></div><div><b>HUMAN360</b><small>PERSONAL HEALTH COMPANION</small></div></div>
+    <div class="auth-grid">
+      <div class="auth-copy"><span class="pill">SMART WELLNESS PLATFORM</span><h1>Your health.<br><em>Your plan.<br>Your progress.</em></h1><p>Build a personalized health journey with calculators, nutrition, exercise, yoga, goals and progress tracking in one place.</p><div class="auth-highlights"><span>✓ Personalized plans</span><span>✓ Human exercise guides</span><span>✓ Progress tracking</span><span>✓ Private local profile</span></div></div>
+      <div class="auth-card">
+        <div class="auth-tabs"><button class="auth-tab active" id="loginTab" onclick="switchAuth('login')">Sign in</button><button class="auth-tab" id="registerTab" onclick="switchAuth('register')">Create account</button></div>
+        <div id="loginForm">
+          <p class="eyebrow">WELCOME BACK</p><h2>Sign in to Human360</h2><p class="auth-muted">Use your <b>username or phone number</b> to sign in. Email is optional.</p>
+          <label>Username or phone number<input id="loginIdentifier" type="text" placeholder="e.g. aryan or 9876543210" autocomplete="username"></label>
+          <label>Password<div class="password-wrap"><input id="loginPassword" type="password" placeholder="Enter password" autocomplete="current-password"><button type="button" onclick="togglePassword('loginPassword',this)">Show</button></div></label>
+          <div class="auth-row"><label class="check"><input id="rememberMe" type="checkbox" checked> Remember me</label><button class="text-btn" type="button" onclick="fillDemoLogin()">Use demo account</button></div>
+          <button class="btn primary wide" onclick="loginUser()">Sign in securely →</button><p class="auth-error" id="loginError"></p>
+        </div>
+        <div id="registerForm" style="display:none">
+          <p class="eyebrow">GET STARTED</p><h2>Create your account</h2><p class="auth-muted">Choose an easy username + phone login. Email is optional.</p>
+          <label>Full name<input id="regName" placeholder="Your name" autocomplete="name"></label>
+          <label>Username<input id="regUsername" type="text" placeholder="Choose a username" autocomplete="username"></label>
+          <label>Phone number<input id="regPhone" type="tel" placeholder="10-digit mobile number" autocomplete="tel"></label>
+          <label>Email <span style="font-weight:500;color:#8a9b9e">(optional)</span><input id="regEmail" type="email" placeholder="you@example.com" autocomplete="email"></label>
+          <label>Password<div class="password-wrap"><input id="regPassword" type="password" placeholder="Minimum 6 characters" autocomplete="new-password"><button type="button" onclick="togglePassword('regPassword',this)">Show</button></div></label>
+          <label class="check"><input id="regTerms" type="checkbox"> I agree to use this demo for personal wellness planning.</label>
+          <button class="btn primary wide" onclick="registerUser()">Create my account →</button><p class="auth-error" id="registerError"></p>
+        </div>
+        <div class="auth-footer">Demo only • No real medical diagnosis • Data stays in this browser</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="appShell">
+<aside class="sidebar">
+  <div class="logo"><div class="logo-box">H</div><div>Human<span>360</span><small>PERSONAL HEALTH</small></div></div>
+  <nav>
+    <button class="nav active" data-target="dashboard">⌂ <span>Dashboard</span></button>
+    <button class="nav" data-target="profile">◉ <span>Profile</span></button>
+    <button class="nav" data-target="calculators">▦ <span>Calculators</span></button>
+    <button class="nav" data-target="nutrition">🥗 <span>Nutrition</span></button>
+    <button class="nav" data-target="fitness">🏃 <span>Exercise & Yoga</span></button>
+    <button class="nav" data-target="progress">📈 <span>Progress Tracking</span></button>
+    <button class="nav" data-target="goals">🎯 <span>Goal Planner</span></button>
+    <button class="nav" data-target="myplan">🗓️ <span>My Smart Plan</span></button>
+    <button class="nav" data-target="report">▤ <span>Health Report</span></button>
+  </nav>
+  <div class="side-note"><b>Wellness first</b><p>Human360 gives estimates for health awareness. It is not a medical diagnosis.</p></div>
+</aside>
+<main class="main">
+<header class="top"><div><p class="eyebrow">HUMAN360</p><h1 id="pageTitle">Good morning 👋</h1></div><div class="top-actions"><button id="themeBtn" class="icon-btn" title="Theme">☾</button><button id="notifyBtn" class="icon-btn" title="Smart insights" onclick="showSmartInsight()">🔔</button><div class="profile-chip"><span>GU</span><b id="topName">Guest</b></div><button class="logout-btn" onclick="logoutUser()">Logout</button></div></header>
+
+<section id="dashboard" class="view active-view">
+ <div class="hero-strip"><div><span class="pill">PERSONAL HEALTH DASHBOARD</span><h2>Your health,<br><em>in one place.</em></h2><p>Track health numbers, meals, activity, hydration and goals with simple personalized guidance.</p><button class="btn primary" onclick="go('profile')">Update profile</button></div><div class="hero-score"><div class="score-ring" id="scoreRing"><div><b id="scoreHero">—</b><small>/100</small></div></div><span id="scoreStatus">Add your profile</span><small>Health Score</small></div></div>
+ <div class="section-title"><div><p class="eyebrow">OVERVIEW</p><h2>Today's numbers</h2></div><button class="btn light" onclick="go('calculators')">View calculators</button></div>
+ <div class="metrics">
+  <div class="metric"><div class="metric-icon teal">⚖</div><span>BMI</span><b id="dashBMI">—</b><small id="dashBMIStatus">Enter profile</small></div>
+  <div class="metric"><div class="metric-icon orange">🔥</div><span>Daily calories</span><b id="dashCal">—</b><small>personal maintenance</small></div>
+  <div class="metric"><div class="metric-icon blue">💧</div><span>Water</span><b id="dashWater">—</b><small>personal daily target</small></div>
+  <div class="metric"><div class="metric-icon purple">❤</div><span>Target heart rate</span><b id="dashHR">—</b><small id="dashHRNote">personal training zone</small></div>
+ </div>
+ <div class="advanced-strip"><div class="coach-card"><div class="coach-icon">✦</div><div><p class="eyebrow">SMART COACH</p><h3 id="smartCoachTitle">Complete your profile for adaptive guidance</h3><p id="smartCoachText">Human360 will combine your goal, activity, fitness level and recent tracking to suggest your next best action.</p></div><button class="btn light" onclick="showSmartInsight()">View insight</button></div><div class="streak-card"><span>🔥</span><div><small>Current streak</small><b id="streakCount">0 days</b></div></div></div>
+ <div class="two-col">
+  <div class="card"><div class="card-head"><div><p class="eyebrow">HEALTH SCORE</p><h3>Your score breakdown</h3></div><span class="status" id="scoreBadge">—</span></div><div class="breakdown"><div><span>BMI</span><b id="sBMI">—</b></div><div><span>Activity</span><b id="sAct">—</b></div><div><span>Water</span><b id="sWater">—</b></div><div><span>Goal</span><b id="sGoal">—</b></div></div><div class="bar"><i id="scoreBar"></i></div><p class="muted" id="scoreAdvice">Enter your profile to get a simple score.</p></div>
+  <div class="card"><p class="eyebrow">PERSONAL FOCUS</p><h3>Suggestions for you</h3><div class="focus" id="focus"><div>👤 Add your profile to see personalized tips.</div></div></div>
+ </div>
+ <div class="section-title"><div><p class="eyebrow">QUICK PROGRESS</p><h2>Recent tracking</h2></div><button class="btn light" onclick="go('progress')">Open progress</button></div>
+ <div class="card"><div id="dashboardProgressChart" class="chart-wrap"></div></div>
+ <div class="section-title"><div><p class="eyebrow">DAILY ACTION CENTER</p><h2>Small actions, real consistency</h2></div><span class="status">Quick log</span></div>
+ <div class="quick-action-grid">
+  <div class="quick-action-card"><div class="quick-action-icon">💧</div><div><b>Drink water</b><p>Add a 250 ml glass to today’s log.</p></div><button class="btn light" onclick="quickLog('water',0.25)">+ 250 ml</button></div>
+  <div class="quick-action-card"><div class="quick-action-icon">🚶</div><div><b>Log a walk</b><p>Add 10 minutes of activity to today.</p></div><button class="btn light" onclick="quickLog('exercise',10)">+ 10 min</button></div>
+  <div class="quick-action-card"><div class="quick-action-icon">🥗</div><div><b>Build a meal plan</b><p>Refresh suggestions for your nutrition style.</p></div><button class="btn light" onclick="go('nutrition');generateSmartMeals()">Open nutrition</button></div>
+  <div class="quick-action-card"><div class="quick-action-icon">📦</div><div><b>Backup your data</b><p>Save a copy of your local wellness data.</p></div><button class="btn light" onclick="exportHuman360Data()">Export</button></div>
+ </div>
+ <div class="advanced-dashboard-grid">
+   <div class="card daily-plan-card"><div class="card-head"><div><p class="eyebrow">TODAY'S SMART PLAN</p><h3 id="todayPlanTitle">Your adaptive plan</h3></div><span class="status" id="planCompletion">0%</span></div><div id="todayPlanList" class="today-plan-list"></div></div>
+   <div class="card weekly-insight-card"><div class="card-head"><div><p class="eyebrow">WEEKLY ANALYTICS</p><h3>Consistency snapshot</h3></div><span>7 days</span></div><div id="weeklyAnalytics" class="analytics-grid"></div></div>
+ </div>
+</section>
+
+<section id="profile" class="view">
+ <div class="page-head"><p class="eyebrow">PROFILE</p><h2>Your Health Profile</h2><p>More personal inputs make water, heart-rate and meal guidance more useful.</p></div>
+ <div class="card form-card"><div class="form-grid">
+  <label>Name<input id="name" placeholder="Your name"></label>
+  <label>Age<input id="age" type="number" min="1" max="120" placeholder="20"></label>
+  <label>Gender<select id="gender"><option value="male">Male</option><option value="female">Female</option></select></label>
+  <label>Height (cm)<input id="height" type="number" min="50" max="250" placeholder="170"></label>
+  <label>Weight (kg)<input id="weight" type="number" min="20" max="300" placeholder="65"></label>
+  <label>Activity Level<select id="activity"><option value="1.2">Sedentary</option><option value="1.375">Lightly active</option><option value="1.55" selected>Moderately active</option><option value="1.725">Very active</option><option value="1.9">Extra active</option></select></label>
+  <label>Daily Exercise (minutes)<input id="exerciseMinutes" type="number" min="0" max="600" placeholder="30"></label>
+  <label>Fitness Level<select id="fitnessLevel"><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></label>
+  <label>Primary Goal<select id="goal"><option value="maintain">Maintain weight</option><option value="loss">Lose weight</option><option value="gain">Gain weight</option></select></label>
+ </div><p class="form-note">Water uses body weight, activity and exercise. Heart-rate zones are estimated from age and are for general guidance only.</p><button class="btn primary wide" onclick="calculate()">Calculate my health profile</button></div>
+</section>
+
+<section id="calculators" class="view">
+ <div class="page-head"><p class="eyebrow">TOOLS</p><h2>Health Calculators</h2><p>These values update from your profile.</p></div>
+ <div class="calc-grid">
+  <div class="tool-card"><span>⚖️</span><h3>BMI</h3><small>Weight-to-height ratio</small><b id="cBMI">—</b></div>
+  <div class="tool-card"><span>🔥</span><h3>BMR</h3><small>Estimated resting calories/day</small><b id="cBMR">—</b></div>
+  <div class="tool-card"><span>🍽️</span><h3>Daily Calories</h3><small>Estimated maintenance</small><b id="cCalories">—</b></div>
+  <div class="tool-card"><span>💧</span><h3>Water Intake</h3><small>Personal daily target</small><b id="cWater">—</b></div>
+  <div class="tool-card"><span>🎯</span><h3>Ideal Weight</h3><small>Reference using BMI 22</small><b id="cIdeal">—</b></div>
+  <div class="tool-card"><span>❤</span><h3>Personal HR Zones</h3><small>Estimated from age; general guide</small><b id="cHR">—</b></div>
+ </div>
+ <div class="card hr-card"><div class="card-head"><div><p class="eyebrow">HEART RATE</p><h3>Training zones for you</h3></div><span class="status" id="hrProfileText">Profile needed</span></div><div class="hr-zones" id="hrZones"></div><p class="muted">These are exercise guidance estimates, not a medical test.</p></div>
+</section>
+
+<section id="nutrition" class="view">
+ <div class="page-head"><p class="eyebrow">NUTRITION</p><h2>Food Database & Personal Meal Guide</h2><p>Search foods, build meals and get meal targets based on your calories, goal and profile.</p></div>
+ <div class="card meal-guide"><div class="card-head"><div><p class="eyebrow">YOUR DAILY PLAN</p><h3>Individual meal guidance</h3></div><span class="status" id="mealGoalBadge">Profile needed</span></div><div class="meal-target-grid"><div><span>Calories</span><b id="mealCalTarget">—</b></div><div><span>Protein</span><b id="mealProteinTarget">—</b></div><div><span>Carbs</span><b id="mealCarbTarget">—</b></div><div><span>Fat</span><b id="mealFatTarget">—</b></div></div><div class="meal-schedule" id="mealSchedule"></div></div>
+ <div class="advanced-food-controls card">
+   <div class="food-control-head"><div><h3>Build food choices around your needs</h3><p class="muted">Get practical Indian meal ideas like roti-dal-sabzi, rajma-chawal, poha, idli-sambar and paneer meals. Suggestions adapt to your preferred nutrition style and daily target.</p></div><button class="btn primary" onclick="generateSmartMeals()">Generate my meal plan ✦</button></div>
+   <div class="nutrition-quickstart">
+    <div class="quickstart-label"><b>What do you want to focus on?</b><span>Choose one. We'll tune your Indian meal suggestions.</span></div>
+    <div class="nutrition-choice-row" role="group" aria-label="Nutrition style">
+     <button type="button" class="nutrition-choice" data-pref="protein" onclick="setNutritionStyle('protein',this)"><span>💪</span><b>Protein-rich</b><small>Dal, paneer, eggs, soya</small></button>
+     <button type="button" class="nutrition-choice selected" data-pref="balanced" onclick="setNutritionStyle('balanced',this)"><span>🥗</span><b>Balanced</b><small>Roti, dal, sabzi, rice</small></button>
+     <button type="button" class="nutrition-choice" data-pref="carb" onclick="setNutritionStyle('carb',this)"><span>⚡</span><b>Carb-rich</b><small>Poha, rice, roti, oats</small></button>
+    </div>
+   </div>
+   <div class="nutrition-simple-controls">
+    <label>Meals per day<select id="mealsPerDay"><option value="3">3 meals</option><option value="4" selected>4 meals</option><option value="5">5 meals</option></select></label>
+    <label>Cooking style<select id="mealStyle"><option value="any">Any Indian style</option><option value="north">North Indian</option><option value="south">South Indian</option><option value="central">Simple home-style</option></select></label>
+    <label>Food budget<select id="foodBudget"><option value="any">Flexible</option><option value="low">Budget-friendly</option><option value="mid">Moderate</option></select></label>
+   </div>
+   <details class="nutrition-advanced-options"><summary>Advanced preferences <span>Optional</span></summary><div class="form-grid compact-grid">
+    <label>Meal priority<select id="mealPriority"><option value="balanced">Balanced</option><option value="protein">Higher protein</option><option value="budget">Simple & budget-friendly</option></select></label>
+    <label>Food search mode<select id="foodMode" onchange="renderFoods()"><option value="all">All foods</option><option value="protein">Protein-rich</option><option value="carb">Carb-rich</option><option value="lowcal">Lower calorie</option></select></label>
+    <label>Cooking time<select id="cookTime"><option value="any">Any time</option><option value="quick">15 minutes or less</option><option value="medium">Up to 30 minutes</option></select></label>
+    <label>Ingredients to avoid<input id="avoidFoods" type="text" placeholder="e.g. peanuts, milk, egg"></label>
+    <label>Extra nutrition focus<select id="nutritionFocus"><option value="balanced">Balanced plate</option><option value="fiber">More fibre</option><option value="protein">More protein</option><option value="light">Lighter meals</option><option value="energy">Higher energy</option></select></label>
+   </div></details>
+   <div class="indian-meal-intro"><b>Your suggested Indian meal plan</b><span>Use “Change suggestions” to explore other combinations.</span></div><div id="smartMealPlan" class="smart-meal-plan"></div>
+   <div id="nutritionProgress" class="nutrition-progress"></div>
+ </div>
+ <div class="food-toolbar"><span class="status" id="foodCount">Expanded database</span><span class="muted">Nutrition values are approximate per 100g for planning; portions are editable estimates.</span></div>
+ <div class="nutrition-grid">
+  <div class="card"><input class="search" id="foodSearch" oninput="renderFoods()" placeholder="Search food e.g. paneer, banana, dal..."><div id="foods"></div></div>
+  <div class="card"><div class="card-head"><div><p class="eyebrow">MEAL BUILDER</p><h3>Your selected foods</h3></div><span class="status" id="mealCount">0 items</span></div><div class="meal-list" id="mealList"></div><div class="total"><span>Total calories</span><b id="mealCalories">0 kcal</b></div><div class="macros"><span>Protein <b id="mP">0g</b></span><span>Carbs <b id="mC">0g</b></span><span>Fat <b id="mF">0g</b></span></div></div>
+ </div>
+</section>
+
+<section id="fitness" class="view">
+ <div class="page-head"><p class="eyebrow">FITNESS</p><h2>Exercise & Yoga Library</h2><p>Real human demonstration images, step-by-step guidance and personalized recommendations.</p></div>
+ <div class="fitness-hero"><img src="./assets/fitness/hero-personalized.jpg" alt="Human demonstrating a fitness exercise"><div class="fitness-hero-copy"><span class="pill">PERSONALIZED MOVEMENT</span><h2>Train smarter. Move better.</h2><p>Your exercise choices are matched to your goal, BMI, fitness level and available time.</p><div class="hero-points"><span>✓ Human visual guides</span><span>✓ No repeated images</span><span>✓ Goal-based suggestions</span></div></div></div>
+ <div id="fitnessRecommendations"></div>
+ <div class="filter-row"><button class="chip active" onclick="filterFitness('all',this)">All</button><button class="chip" onclick="filterFitness('cardio',this)">Cardio</button><button class="chip" onclick="filterFitness('strength',this)">Strength</button><button class="chip" onclick="filterFitness('core',this)">Core</button><button class="chip" onclick="filterFitness('yoga',this)">Yoga</button></div>
+ <div class="rec-grid" id="fitnessGrid"></div>
+</section>
+
+<section id="progress" class="view">
+ <div class="page-head"><p class="eyebrow">PROGRESS</p><h2>Health Progress Tracking</h2><p>Save your daily check-ins and see weight, water and activity trends.</p></div>
+ <div class="card"><div class="form-grid progress-form"><label>Weight (kg)<input id="trackWeight" type="number" step="0.1"></label><label>Water (L)<input id="trackWater" type="number" step="0.1"></label><label>Exercise (min)<input id="trackExercise" type="number"></label><label>Daily Calories<input id="trackCalories" type="number"></label></div><button class="btn primary" onclick="saveProgress()">Save today's progress</button><p class="success" id="progressSaved"></p></div>
+ <div class="progress-grid"><div class="card"><div class="card-head"><div><p class="eyebrow">WEIGHT</p><h3>Weight trend</h3></div><span class="status" id="weightTrendText">—</span></div><div id="weightChart" class="chart-wrap"></div></div><div class="card"><div class="card-head"><div><p class="eyebrow">HYDRATION</p><h3>Water trend</h3></div><span class="status" id="waterTrendText">—</span></div><div id="waterChart" class="chart-wrap"></div></div></div>
+ <div class="card"><div class="card-head"><div><p class="eyebrow">CHECK-INS</p><h3>Saved progress</h3></div><button class="btn light" onclick="clearProgress()">Clear history</button></div><div id="progressTable"></div></div>
+</section>
+
+<section id="goals" class="view">
+ <div class="page-head"><p class="eyebrow">GOALS</p><h2>Advanced Goal Planner</h2><p>Set a realistic target, weekly pace, activity plan and milestones.</p></div>
+ <div class="two-col"><div class="card"><div class="form-grid"><label>Target Weight (kg)<input id="targetWeight" type="number" step="0.1"></label><label>Timeframe (weeks)<input id="targetWeeks" type="number" min="1" max="52" value="12"></label><label>Water Goal (L/day)<input id="targetWater" type="number" step="0.1"></label><label>Exercise Goal (min/week)<input id="targetExercise" type="number" value="150"></label><label>Steps Goal/day<input id="targetSteps" type="number" value="7000"></label><label>Sleep Goal (hours)<input id="targetSleep" type="number" step="0.1" value="8"></label></div><label class="check-row"><input id="goalAuto" type="checkbox" checked> Adjust weekly target from my current weight and goal</label><button class="btn primary wide" onclick="saveGoals()">Create my goal plan</button><p class="success" id="goalSaved"></p></div><div class="card goal-preview"><p class="eyebrow">PLAN</p><h3>Your personalized milestones</h3><div id="goalCards"></div><div id="goalProgressBars"></div></div></div>
+</section>
+
+<section id="myplan" class="view">
+ <div class="page-head"><p class="eyebrow">SMART PLAN</p><h2>Your Adaptive Health Plan</h2><p>Human360 combines your goal, fitness level, exercise time, heart-rate range and nutrition targets into a simple daily routine.</p></div>
+ <div class="smart-plan-hero"><div><span class="pill">ADAPTIVE COACH</span><h2 id="planHeroTitle">Complete your profile to generate your plan</h2><p id="planHeroText">Your plan will update when your profile or progress changes.</p></div><button class="btn primary" onclick="generateSmartPlan(true)">Refresh my plan ↻</button></div>
+ <div class="plan-timeline" id="smartPlanTimeline"></div>
+ <div class="two-col"><div class="card"><div class="card-head"><div><p class="eyebrow">NUTRITION TIMING</p><h3>Daily targets</h3></div></div><div id="planNutrition" class="plan-nutrition"></div></div><div class="card"><div class="card-head"><div><p class="eyebrow">RECOVERY & SAFETY</p><h3>Keep it sustainable</h3></div></div><div id="planRecovery" class="plan-recovery"></div></div></div>
+</section>
+
+
+<section id="report" class="view">
+ <div class="page-head"><p class="eyebrow">REPORT</p><h2>Visual Health Report</h2><p>See your main numbers, trends, goal progress and nutrition guidance in one printable report.</p></div>
+ <div class="card report-card"><div class="report-header"><div><h3>Human360 Personal Health Summary</h3><p class="muted" id="reportDate"></p></div><div class="report-score" id="reportScore">—</div></div><div class="report-visual-grid"><div class="report-panel"><h4>Health overview</h4><div id="reportBody"></div></div><div class="report-panel"><h4>Progress graph</h4><div id="reportProgressChart" class="chart-wrap"></div></div><div class="report-panel"><h4>Goal progress</h4><div id="reportGoalVisual"></div></div><div class="report-panel"><h4>Daily nutrition split</h4><div id="reportMacroVisual"></div></div></div><button class="btn primary wide" onclick="window.print()">Print / Save PDF</button></div>
+</section>
+</main></div>
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="modal-box"><button onclick="closeModal()">×</button><h2 id="modalTitle"></h2><div id="modalVisual"></div><p id="modalText"></p></div></div>
+<script src="./app.js"></script>
+</body></html>
